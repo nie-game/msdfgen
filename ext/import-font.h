@@ -81,6 +81,7 @@ bool getFontMetrics(FontMetrics &metrics, FontHandle *font, FontCoordinateScalin
 bool getFontWhitespaceWidth(double &spaceAdvance, double &tabAdvance, FontHandle *font, FontCoordinateScaling coordinateScaling = FONT_SCALING_LEGACY);
 /// Outputs the total number of glyphs available in the font.
 bool getGlyphCount(unsigned &output, FontHandle *font);
+bool getCodepoint(unicode_t &output, GlyphIndex glyphIndex, FontHandle *font);
 /// Outputs the glyph index corresponding to the specified Unicode character.
 bool getGlyphIndex(GlyphIndex &glyphIndex, FontHandle *font, unicode_t unicode);
 /// Loads the geometry of a glyph from a font.

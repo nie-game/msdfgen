@@ -37,6 +37,7 @@ class FontHandle {
     friend bool getFontMetrics(FontMetrics &metrics, FontHandle *font, FontCoordinateScaling coordinateScaling);
     friend bool getFontWhitespaceWidth(double &spaceAdvance, double &tabAdvance, FontHandle *font, FontCoordinateScaling coordinateScaling);
     friend bool getGlyphCount(unsigned &output, FontHandle *font);
+    friend bool getCodepoint(unicode_t &output, GlyphIndex glyphIndex, FontHandle *font);
     friend bool getGlyphIndex(GlyphIndex &glyphIndex, FontHandle *font, unicode_t unicode);
     friend bool loadGlyph(Shape &output, FontHandle *font, GlyphIndex glyphIndex, FontCoordinateScaling coordinateScaling, double *outAdvance);
     friend bool loadGlyph(Shape &output, FontHandle *font, unicode_t unicode, FontCoordinateScaling coordinateScaling, double *outAdvance);
@@ -219,6 +220,24 @@ bool getFontWhitespaceWidth(double &spaceAdvance, double &tabAdvance, FontHandle
 bool getGlyphCount(unsigned &output, FontHandle *font) {
     output = (unsigned) font->face->num_glyphs;
     return true;
+}
+
+bool getCodepoint(unicode_t &output, GlyphIndex glyphIndex, FontHandle *font) {
+    FT_Select_Charmap(font->face, FT_ENCODING_UNICODE);
+
+    FT_ULong charcode;
+    FT_UInt gid;
+
+    charcode = FT_Get_First_Char(font->face, &gid);
+    while (gid != 0)
+    {
+        if(gid == glyphIndex.getIndex()) {
+            output = charcode;
+            return true;
+        }
+        charcode = FT_Get_Next_Char(font->face, charcode, &gid);
+    }
+    return false;
 }
 
 bool getGlyphIndex(GlyphIndex &glyphIndex, FontHandle *font, unicode_t unicode) {
